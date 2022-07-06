@@ -10,48 +10,41 @@ namespace SimulasiAntriATM
     {
         public static Dictionary<string, int> JenisKelamin = new Dictionary<string, int>()
         {
-            { "Laki-laki;BCA", 20 },
-            { "Perempuan;BCA", 21 },
-            { "Laki-laki;BRI", 25 },
-            { "Perempuan;BRI", 34 }
+            { "Laki-laki", 45 },
+            { "Perempuan", 55 }
         };
 
         public static Dictionary<string, int> RangeUmur = new Dictionary<string, int>()
         {
-            { "Remaja;BCA", 10 },
-            { "Dewasa;BCA", 31 },
-            { "Lansia;BCA", 0 },
-            { "Remaja;BRI", 16 },
-            { "Dewasa;BRI", 34 },
-            { "Lansia;BRI", 9 }
+            { "Remaja", 26 },
+            { "Dewasa", 65 },
+            { "Lansia", 9 }
         };
 
         public static Dictionary<string, int> Sendiri = new Dictionary<string, int>()
         {
-            { "Ya;BCA", 38 },
-            { "Tidak;BCA", 3 },
-            { "Ya;BRI", 52 },
-            { "Tidak;BRI", 7 }
+            { "Ya", 90 },
+            { "Tidak", 10 }
         };
 
         public static Dictionary<string, int> JenisTransaksi = new Dictionary<string, int>()
         {
-            { "Tarik;BCA", 21 },
-            { "Transfer;BCA", 17 },
-            { "Cek Saldo;BCA", 2 },
-            { "Setor;BCA", 1 },
-            { "Tarik;BRI", 40 },
-            { "Transfer;BRI", 15 },
-            { "Cek Saldo;BRI", 4 },
-            { "Setor;BRI", 0 }
+            { "Tarik", 61 },
+            { "Transfer", 32 },
+            { "Cek Saldo", 6 },
+            { "Setor", 1 }
         };
 
         public static Dictionary<string, int> MengantriUlang = new Dictionary<string, int>()
         {
-            { "Ya;BCA", 2 },
-            { "Tidak;BCA", 39 },
-            { "Ya;BRI", 6 },
-            { "Tidak;BRI", 53 }
+            { "Ya", 8 },
+            { "Tidak", 92 }
+        };
+
+        public static Dictionary<string, int> Bank = new Dictionary<string, int>()
+        {
+            { "BRI", 59 },
+            { "BCA", 41 }
         };
     }
 }

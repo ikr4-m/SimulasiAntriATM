@@ -14,6 +14,8 @@ namespace SimulasiAntriATM
     public partial class Form1 : Form
     {
         private Stopwatch _timer = new Stopwatch();
+        private int _BCAMaxWSP = 0;
+        private int _BRIMaxWSP = 0;
 
         public Form1()
         {
@@ -24,12 +26,14 @@ namespace SimulasiAntriATM
         {
             DGTabelData.Rows.Clear();
             _timer.Reset();
+
+            _BCAMaxWSP = 0;
+            _BRIMaxWSP = 0;
         }
 
         private bool IsianTidakValid()
         {
             bool ret = false;
-            if (CmbATM.Text == "") ret = true;
             if (NumIWKBatasBawah.Value >= NumIWKBatasAtas.Value) ret = true;
             if (NumLPBatasBawah.Value >= NumLPBatasAtas.Value) ret = true;
 
@@ -42,9 +46,9 @@ namespace SimulasiAntriATM
         {
             var caster = DGTabelData.Rows.Cast<DataGridViewRow>();
             int panjang = (int)NumJumlahPengunjung.Value;
-            int wspFinal = (int)DGTabelData.Rows[panjang - 1].Cells["WSP"].Value;
-            double avgWaktuAntri = (double)DGTabelData.Rows.Cast<DataGridViewRow>().Sum(x => (int)x.Cells["WA"].Value) / panjang;
+            int wspFinal = _BCAMaxWSP > _BRIMaxWSP ? _BCAMaxWSP : _BRIMaxWSP;
             double avgIWK = (double)caster.Sum(x => (int)x.Cells["IWK"].Value) / panjang;
+            double avgWaktuAntri = (double)DGTabelData.Rows.Cast<DataGridViewRow>().Sum(x => (int)x.Cells["WA"].Value) / panjang;
 
             string jenisKelaminTerbanyak = caster.GroupBy(x => x.Cells["JenisKelamin"].Value.ToString())
                 .OrderByDescending(x => x.Count())
@@ -80,38 +84,43 @@ namespace SimulasiAntriATM
                 int randIWK = random.Next((int)NumIWKBatasBawah.Value, (int)NumIWKBatasAtas.Value);
                 int randLP = random.Next((int)NumLPBatasBawah.Value, (int)NumLPBatasAtas.Value);
 
+                string bank = AlatBantu.BangkitkanVariabelAcak(Variabel.Bank, random.NextDouble());
                 DGTabelData.Rows.Add();
                 DGTabelData.Rows[i].Cells["No"].Value = i + 1;
-                DGTabelData.Rows[i].Cells["LP"].Value = randLP;
+                DGTabelData.Rows[i].Cells["Bank"].Value = bank;
+                DGTabelData.Rows[i].Cells[$"LP{bank}"].Value = randLP;
 
                 if (i == 0)
                 {
-                    DGTabelData.Rows[i].Cells["IWK"].Value = 0;
-                    DGTabelData.Rows[i].Cells["WK"].Value = 0;
-                    DGTabelData.Rows[i].Cells["WA"].Value = 0;
-                    DGTabelData.Rows[i].Cells["WMP"].Value = 0;
+                    DGTabelData.Rows[i].Cells[$"IWK"].Value = 0;
+                    DGTabelData.Rows[i].Cells[$"WK"].Value = 0;
+                    DGTabelData.Rows[i].Cells[$"WA"].Value = 0;
+                    DGTabelData.Rows[i].Cells[$"WMP{bank}"].Value = 0;
                 }
                 else
                 {
-                    int wspLama = (int)DGTabelData.Rows[i - 1].Cells["WSP"].Value;
+                    int wspLama = 0;
+                    if (bank == "BRI") wspLama = _BRIMaxWSP;
+                    else wspLama = _BCAMaxWSP;
+
                     int wk = (int)DGTabelData.Rows[i - 1].Cells["WK"].Value + randIWK;
                     int wmpBaru = wspLama > wk ? wspLama : wk;
 
-                    DGTabelData.Rows[i].Cells["WMP"].Value = wspLama > wk ? wspLama : wk;
+                    DGTabelData.Rows[i].Cells[$"WMP{bank}"].Value = wspLama > wk ? wspLama : wk;
                     DGTabelData.Rows[i].Cells["IWK"].Value = randIWK;
                     DGTabelData.Rows[i].Cells["WK"].Value = wk;
                     DGTabelData.Rows[i].Cells["WA"].Value = wmpBaru - wk;
                 }
-
-                DGTabelData.Rows[i].Cells["WSP"].Value = randLP + (int)DGTabelData.Rows[i].Cells["WMP"].Value;
+                DGTabelData.Rows[i].Cells[$"WSP{bank}"].Value = randLP + (int)DGTabelData.Rows[i].Cells[$"WMP{bank}"].Value;
+                if (bank == "BRI") _BRIMaxWSP = (int)DGTabelData.Rows[i].Cells[$"WSP{bank}"].Value;
+                else _BCAMaxWSP = (int)DGTabelData.Rows[i].Cells[$"WSP{bank}"].Value;
 
                 // Bangkitkan angka random untuk variabel penunjang
-                string bank = CmbATM.Text;
-                DGTabelData.Rows[i].Cells["JenisKelamin"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.JenisKelamin, bank, random.NextDouble());
-                DGTabelData.Rows[i].Cells["RangeUmur"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.RangeUmur, bank, random.NextDouble());
-                DGTabelData.Rows[i].Cells["Sendiri"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.Sendiri, bank, random.NextDouble());
-                DGTabelData.Rows[i].Cells["JenisTransaksi"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.JenisTransaksi, bank, random.NextDouble());
-                DGTabelData.Rows[i].Cells["MengantriUlang"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.MengantriUlang, bank, random.NextDouble());
+                DGTabelData.Rows[i].Cells["JenisKelamin"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.JenisKelamin, random.NextDouble());
+                DGTabelData.Rows[i].Cells["RangeUmur"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.RangeUmur, random.NextDouble());
+                DGTabelData.Rows[i].Cells["Sendiri"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.Sendiri, random.NextDouble());
+                DGTabelData.Rows[i].Cells["JenisTransaksi"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.JenisTransaksi, random.NextDouble());
+                DGTabelData.Rows[i].Cells["MengantriUlang"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.MengantriUlang, random.NextDouble());
             }
 
             _timer.Stop();

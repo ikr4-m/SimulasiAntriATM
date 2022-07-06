@@ -14,12 +14,10 @@ namespace SimulasiAntriATM
             return (int)Math.Floor(decimal.Parse(data.ToString()) / 60);
         }
 
-        public static string BangkitkanVariabelAcak(Dictionary<string, int> data, string bank, double angkaAcak)
+        public static string BangkitkanVariabelAcak(Dictionary<string, int> data, double angkaAcak)
         {
             // Eliminasi data yang kosong dan bukan banknya
-            var dataBaru = data
-                .Where(x => x.Key.Split(';')[1] == bank && x.Value > 0)
-                .ToDictionary(x => x.Key, x => x.Value);
+            var dataBaru = data.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
             int jumlahData = dataBaru.ToArray().Select(x => x.Value).Aggregate(0, (acc, x) => acc + x);
 
             // Ambil nama variabel
@@ -36,7 +34,7 @@ namespace SimulasiAntriATM
                 frekuensiKumulatif.Add(val);
             }
 
-            // Cari data dengan cara metode LIFO
+            // Cari data dengan cara metode FIFO
             int ifrekuensi = 0;
             for (int i = 0; i < frekuensiKumulatif.Count; i++)
             {
@@ -47,7 +45,7 @@ namespace SimulasiAntriATM
                 }
             }
 
-            return namaVar[ifrekuensi].Split(';')[0];
+            return namaVar[ifrekuensi];
         }
     }
 }
