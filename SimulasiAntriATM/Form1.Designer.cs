@@ -79,7 +79,7 @@
             // 
             this.NumJumlahPengunjung.Location = new System.Drawing.Point(158, 7);
             this.NumJumlahPengunjung.Maximum = new decimal(new int[] {
-            999,
+            99999,
             0,
             0,
             0});

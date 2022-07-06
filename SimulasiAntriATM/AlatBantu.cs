@@ -9,9 +9,23 @@ namespace SimulasiAntriATM
 {
     public class AlatBantu
     {
-        public static int KeMenit(object data)
+        public static string CariJumlahTerbanyak(IEnumerable<DataGridViewRow> caster, string id)
         {
-            return (int)Math.Floor(decimal.Parse(data.ToString()) / 60);
+            return caster.GroupBy(x => x.Cells[id].Value.ToString())
+                .OrderByDescending(x => x.Count())
+                .Select(x => $"{x.Key} ({x.Count()} orang)")
+                .First();
+        }
+
+        public static int KeJam(object data)
+        {
+            return (int)Math.Floor((decimal)KeMenit(data) / 60);
+        }
+
+        public static int KeMenit(object data, bool potong = false)
+        {
+            int menit = (int)Math.Floor(decimal.Parse(data.ToString()) / 60);
+            return potong ? menit % 60 : menit;
         }
 
         public static string BangkitkanVariabelAcak(Dictionary<string, int> data, double angkaAcak)

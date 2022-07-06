@@ -50,23 +50,19 @@ namespace SimulasiAntriATM
             double avgIWK = (double)caster.Sum(x => (int)x.Cells["IWK"].Value) / panjang;
             double avgWaktuAntri = (double)DGTabelData.Rows.Cast<DataGridViewRow>().Sum(x => (int)x.Cells["WA"].Value) / panjang;
 
-            string jenisKelaminTerbanyak = caster.GroupBy(x => x.Cells["JenisKelamin"].Value.ToString())
-                .OrderByDescending(x => x.Count())
-                .Select(x => $"{x.Key} ({x.Count()} orang)")
-                .First();
-            string umurTerbanyak = caster.GroupBy(x => x.Cells["RangeUmur"].Value.ToString())
-                .OrderByDescending(x => x.Count())
-                .Select(x => $"{x.Key} ({x.Count()} orang)")
-                .First();
-            string jenisTransaksiTerbanyak = caster.GroupBy(x => x.Cells["JenisTransaksi"].Value.ToString())
-                .OrderByDescending(x => x.Count())
-                .Select(x => $"{x.Key} ({x.Count()} orang)")
-                .First();
+            string jenisKelaminTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "JenisKelamin");
+            string umurTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "RangeUmur");
+            string jenisTransaksiTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "JenisTransaksi");
+            string jenisBankTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "Bank");
 
-            TxtKeterangan.Text = $"- Waktu yang dibutuhkan untuk melayani {panjang} orang adalah {AlatBantu.KeMenit(wspFinal)} menit ({wspFinal} detik)." + Environment.NewLine +
+            var jamSkrg = DateTime.Now;
+
+            TxtKeterangan.Text = $"- Waktu yang dibutuhkan untuk melayani {panjang} orang adalah {AlatBantu.KeJam(wspFinal)} jam {AlatBantu.KeMenit(wspFinal, true)} menit ({wspFinal} detik)." + Environment.NewLine +
                 $"- Rata-rata interval waktu kedatangan adalah {avgIWK:0.##} detik" + Environment.NewLine +
                 $"- Rata-rata waktu antri adalah {avgWaktuAntri:0.##} detik" + Environment.NewLine +
                 $"- Diperkirakan kebanyakan orang yang mengantri adalah berjenis kelamin {jenisKelaminTerbanyak}, umur {umurTerbanyak}, dan jenis transaksi yaitu {jenisTransaksiTerbanyak}." + Environment.NewLine +
+                $"- ATM yang lebih banyak digunakan adalah Bank {jenisBankTerbanyak}" + Environment.NewLine +
+                $"- Apabila antrian dimulai pada {jamSkrg:MMM dd, HH:mm:ss} maka diperkirakan seluruh proses akan selesai pada {jamSkrg.AddSeconds(wspFinal):MMM dd, HH:mm:ss}" + Environment.NewLine +
                 $"- Lama yang digunakan untuk menghitung simulasi ini adalah {_timer.ElapsedMilliseconds} ms";
         }
 
