@@ -32,7 +32,7 @@ namespace SimulasiAntriATM
             var dataBaru = data.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
             int jumlahData = dataBaru.ToArray().Select(x => x.Value).Aggregate(0, (acc, x) => acc + x);
 
-            // Ambil nama variabel
+            // Ambil nama variabel untuk disusun
             var namaVar = new List<string>();
             foreach (var i in dataBaru) namaVar.Add(i.Key);
 
@@ -46,7 +46,7 @@ namespace SimulasiAntriATM
                 frekuensiKumulatif.Add(val);
             }
 
-            // Cari data dengan cara metode FIFO
+            // Cari posisi data dengan cara metode FIFO
             int ifrekuensi = 0;
             for (int i = 0; i < frekuensiKumulatif.Count; i++)
             {
