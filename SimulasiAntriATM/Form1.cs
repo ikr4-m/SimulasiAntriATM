@@ -95,7 +95,7 @@ namespace SimulasiAntriATM
                 }
                 else
                 {
-                    int wspLama = 0;
+                    int wspLama;
                     if (bank == "BRI") wspLama = _BRIMaxWSP;
                     else wspLama = _BCAMaxWSP;
 

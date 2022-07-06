@@ -45,8 +45,8 @@
             this.No = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IWK = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.WK = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.WA = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Bank = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WA = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.WMPBRI = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LPBRI = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.WSPBRI = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -125,8 +125,8 @@
             this.No,
             this.IWK,
             this.WK,
-            this.WA,
             this.Bank,
+            this.WA,
             this.WMPBRI,
             this.LPBRI,
             this.WSPBRI,
@@ -280,17 +280,17 @@
             this.WK.Name = "WK";
             this.WK.ReadOnly = true;
             // 
-            // WA
-            // 
-            this.WA.HeaderText = "Waktu Antri";
-            this.WA.Name = "WA";
-            this.WA.ReadOnly = true;
-            // 
             // Bank
             // 
             this.Bank.HeaderText = "Bank";
             this.Bank.Name = "Bank";
             this.Bank.ReadOnly = true;
+            // 
+            // WA
+            // 
+            this.WA.HeaderText = "Waktu Antri";
+            this.WA.Name = "WA";
+            this.WA.ReadOnly = true;
             // 
             // WMPBRI
             // 
@@ -410,8 +410,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn No;
         private System.Windows.Forms.DataGridViewTextBoxColumn IWK;
         private System.Windows.Forms.DataGridViewTextBoxColumn WK;
-        private System.Windows.Forms.DataGridViewTextBoxColumn WA;
         private System.Windows.Forms.DataGridViewTextBoxColumn Bank;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WA;
         private System.Windows.Forms.DataGridViewTextBoxColumn WMPBRI;
         private System.Windows.Forms.DataGridViewTextBoxColumn LPBRI;
         private System.Windows.Forms.DataGridViewTextBoxColumn WSPBRI;
