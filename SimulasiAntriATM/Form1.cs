@@ -47,10 +47,27 @@ namespace SimulasiAntriATM
             double avgIWK = (double)caster.Sum(x => (int)x.Cells["IWK"].Value) / panjang;
             double avgWaktuAntri = (double)caster.Sum(x => (int)x.Cells["WA"].Value) / panjang;
 
+            // Cari Jenis Kelamin terbanyak
             string jenisKelaminTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "JenisKelamin");
+            // Cari range umur yang terbanyak
             string umurTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "RangeUmur");
+            // Cari jenis transaksi terbanyak
             string jenisTransaksiTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "JenisTransaksi");
+            // Cari jenis bank terbanyak
             string jenisBankTerbanyak = AlatBantu.CariJumlahTerbanyak(caster, "Bank");
+
+            string lakiLaki = AlatBantu.CariJumlahVariabel(caster, "JenisKelamin", "Laki-laki");
+            // Cari perempuan di BCA yang melakukan setor
+            int perempuanBCASetor = caster
+                .Where(x => (string)x.Cells["JenisKelamin"].Value == "Perempuan"
+                    && (string)x.Cells["Bank"].Value == "BCA"
+                    && (string)x.Cells["JenisTransaksi"].Value == "Setor")
+                .Count();
+            int[] carinasabah = caster
+                .Where(x => (string)x.Cells["JenisKelamin"].Value == "Perempuan"
+                    && (string)x.Cells["Bank"].Value == "BCA"
+                    && (string)x.Cells["JenisTransaksi"].Value == "Setor")
+                .Select (x => (int)x.Cells["No"].Value).ToArray();
 
             var jamSkrg = DateTime.Now;
 
@@ -58,7 +75,10 @@ namespace SimulasiAntriATM
                 $"- Rata-rata interval waktu kedatangan adalah {avgIWK:0.##} detik" + Environment.NewLine +
                 $"- Rata-rata waktu antri adalah {avgWaktuAntri:0.##} detik" + Environment.NewLine +
                 $"- Diperkirakan kebanyakan orang yang mengantri adalah berjenis kelamin {jenisKelaminTerbanyak}, umur {umurTerbanyak}, dan jenis transaksi yaitu {jenisTransaksiTerbanyak}." + Environment.NewLine +
+                $"- Yang berjenis kelamin laki-laki adalah {lakiLaki}." + Environment.NewLine +
                 $"- ATM yang lebih banyak digunakan adalah Bank {jenisBankTerbanyak}" + Environment.NewLine +
+                $"- Jumlah orang yang berjenis kelamin perempuan yang menggunakan BCA dan melakukan transaksi Setor adalah {perempuanBCASetor} orang di urutan ke {string.Join(", ",carinasabah)}" + Environment.NewLine +
+                $"- Nasabah BCA yang berjenis kelamin perempuan dan melakukan setor di urutan {(posisiBCA == 0 ? 0 : posisiBCA + 1)}" + Environment.NewLine +
                 $"- Apabila antrian dimulai pada {jamSkrg:MMM dd, HH:mm:ss} maka diperkirakan seluruh proses akan selesai pada {jamSkrg.AddSeconds(wspFinal):MMM dd, HH:mm:ss}" + Environment.NewLine +
                 $"- Lama yang digunakan untuk menghitung simulasi ini adalah {_timer.ElapsedMilliseconds} ms";
         }
@@ -100,7 +120,9 @@ namespace SimulasiAntriATM
                     if (bank == "BRI") wspLama = _BRIMaxWSP;
                     else wspLama = _BCAMaxWSP;
 
+                    // Mencari nilai WK
                     int wk = (int)DGTabelData.Rows[i - 1].Cells["WK"].Value + randIWK;
+                    // Mencari nilai WMP
                     int wmpBaru = wspLama > wk ? wspLama : wk;
 
                     DGTabelData.Rows[i].Cells[$"WMP{bank}"].Value = wspLama > wk ? wspLama : wk;
@@ -122,6 +144,7 @@ namespace SimulasiAntriATM
                 DGTabelData.Rows[i].Cells["Sendiri"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.Sendiri, random.NextDouble());
                 DGTabelData.Rows[i].Cells["JenisTransaksi"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.JenisTransaksi, random.NextDouble());
                 DGTabelData.Rows[i].Cells["MengantriUlang"].Value = AlatBantu.BangkitkanVariabelAcak(Variabel.MengantriUlang, random.NextDouble());
+                
             }
 
             _timer.Stop();

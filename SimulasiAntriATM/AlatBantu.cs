@@ -7,12 +7,19 @@ namespace SimulasiAntriATM
 {
     public class AlatBantu
     {
+
         public static string CariJumlahTerbanyak(IEnumerable<DataGridViewRow> caster, string id)
         {
             return caster.GroupBy(x => x.Cells[id].Value.ToString())
                 .OrderByDescending(x => x.Count())
                 .Select(x => $"{x.Key} ({x.Count()} orang)")
                 .First();
+        }
+
+        public static string CariJumlahVariabel(IEnumerable<DataGridViewRow> caster, string id, string variabel)
+        {
+            int jumlah = caster.Where(x => (string)x.Cells[id].Value == variabel).Count();
+            return $"{jumlah} orang";
         }
 
         public static int KeJam(object data)
@@ -36,7 +43,7 @@ namespace SimulasiAntriATM
             var namaVar = new List<string>();
             foreach (var i in dataBaru) namaVar.Add(i.Key);
 
-            // Bangkitkan frekuensi kumulatif
+            // Bangkitkan frekuensi kumulatif dengan rumus (Frekuensi / Total Frekuensi) + Frekuensi Kumulatif Sebelumnya
             var frekuensiKumulatif = new List<double>();
             foreach (var i in namaVar)
             {
